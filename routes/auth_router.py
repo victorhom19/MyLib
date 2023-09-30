@@ -33,34 +33,19 @@ reset_password_router = fastapi_users.get_reset_password_router()
 verify_router = fastapi_users.get_verify_router(UserRead)
 
 
-@verify_router.post("/exchange_verify_code")
-async def exchange_verify_code(code: str):
+@verify_router.post("/exchange_code")
+@auth_router.post("/exchange_code")
+async def exchange_code(code: str):
     cache = get_cache_instance()
     token = cache.get(code)
     if token is None:
         raise HTTPException(status_code=status.HTTP_408_REQUEST_TIMEOUT)
     cache.delete(code)
-    return {"verify_token": token}
-
-
-@auth_router.post("/auth/email/verify")
-async def request_email_verification(user: User = Depends(current_user)):
-    verify_email_token = uuid.uuid1().hex
+    return {"token": token}
 
 
 
-@auth_router.post("/auth/email/verify/{code}/confirm")
-async def confirm_email_verification(code: str,
-                                     user: User = Depends(current_user),
-                                     cache: StrictRedis = Depends(get_cache_instance),
-                                     session: AsyncSession = Depends(get_async_session)):
-    stored_token = cache.get(f"user_verify_{user.id}")
-    if stored_token is None:
-        raise HTTPException(status_code=status.HTTP_408_REQUEST_TIMEOUT)
-    if stored_token != code:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    user.is_verified = True
-    await session.commit()
+
 
 
 class RestoreModel(BaseModel):

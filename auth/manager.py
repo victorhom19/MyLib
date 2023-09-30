@@ -1,5 +1,6 @@
 import secrets
 import smtplib
+import string
 import uuid
 from email.message import EmailMessage
 from typing import Optional
@@ -27,8 +28,12 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, uuid.UUID]):
                                       token: str, request: Optional[Request] = None):
         print(f"User {user.id} requested verification")
         cache = get_cache_instance()
-        reset_code = secrets.token_hex(6)
-        cache.set(reset_code, token, ex=MAIL_SERVICE_TOKEN_EXPIRATION_TIME)
+        alphabet = string.ascii_letters + string.digits
+        while True:
+            reset_code = ''.join([secrets.choice(alphabet) for _ in range(5)])
+            if cache.get(reset_code) is None:
+                cache.set(reset_code, token, ex=MAIL_SERVICE_TOKEN_EXPIRATION_TIME)
+                break
         msg = EmailMessage()
         msg.set_content(
             f"Hello {user.name}! Your email verify code: {reset_code}"
@@ -46,8 +51,30 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, uuid.UUID]):
         except Exception:
             raise HTTPException(status_code=503)  # Mail service unavailable
 
-    async def on_after_verify(self, user: User, request: Optional[Request] = None):
-        print(f"User {user.id} verified")
+    async def on_after_forgot_password(self, user: models.UP, token: str, request: Optional[Request] = None):
+        print(f"User {user.id} requested verification")
+        cache = get_cache_instance()
+        while True:
+            reset_code = secrets.token_hex(6)
+            if cache.get(reset_code) is None:
+                cache.set(reset_code, token, ex=MAIL_SERVICE_TOKEN_EXPIRATION_TIME)
+                break
+        msg = EmailMessage()
+        msg.set_content(
+            f"Hello {user.name}! Your reset password code: {reset_code}"
+        )
+        msg['Subject'] = "MyLib email verification"
+        msg['From'] = MAIL_SERVICE_EMAIL
+        msg['To'] = user.email
+
+        try:
+            s = smtplib.SMTP(MAIL_SERVICE_SMTP_SERVER)
+            s.starttls()
+            s.login(MAIL_SERVICE_EMAIL, MAIL_SERVICE_PASS)
+            s.send_message(msg)
+            s.quit()
+        except Exception:
+            raise HTTPException(status_code=503)  # Mail service unavailable
 
     async def create(
         self,
@@ -76,6 +103,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, uuid.UUID]):
         await self.on_after_register(created_user, request)
 
         return created_user
+
 
 async def get_user_manager(user_db=Depends(get_user_db)):
     yield UserManager(user_db)

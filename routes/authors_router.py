@@ -1,7 +1,4 @@
-from statistics import mean
-
 from fastapi import APIRouter, Depends, status, HTTPException
-from fastapi.openapi.models import Response
 from pydantic import BaseModel
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
