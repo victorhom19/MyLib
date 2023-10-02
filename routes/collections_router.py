@@ -1,14 +1,12 @@
-from statistics import mean
 from typing import List
 
 from fastapi import APIRouter, Depends, status, HTTPException
-from fastapi.openapi.models import Response
 from pydantic import BaseModel
-from sqlalchemy import select, func
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from auth.database import get_async_session
-from models.models import Book, Author, User, Role, Review, Collection, BookToCollection
+from models.models import Book, User, Role, Collection, BookToCollection
 from routes.auth_router import current_user
 
 
@@ -84,6 +82,7 @@ async def create_collection(new_collection: CollectionModel,
     session.add(collection)
     await session.commit()
     for book_id in new_collection.book_ids:
+
         book_to_collection = BookToCollection(
             collection_id=collection.id,
             book_id=book_id

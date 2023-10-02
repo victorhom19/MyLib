@@ -56,6 +56,7 @@ class Review(Base):
     __tablename__ = "Reviews"
 
     id = Column("id", Integer, Identity(start=1, increment=1), primary_key=True)
+    user_id = Column("user_id", ForeignKey("Users.id", ondelete="CASCADE"), nullable=False)
     book_id = Column("book_id", ForeignKey("Books.id", ondelete="CASCADE"), nullable=False)
     rating = Column("rating", Integer, nullable=False)
     text = Column("text", String, nullable=False)
