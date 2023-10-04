@@ -38,7 +38,7 @@ class Book(Base):
     __tablename__ = "Books"
 
     id = Column("id", Integer, Identity(start=1, increment=1), primary_key=True)
-    name = Column("name", String, nullable=False)
+    title = Column("title", String, nullable=False)
     year = Column("year", Integer, nullable=False)
     author_id = Column("author_id", ForeignKey("Authors.id", ondelete="CASCADE"), nullable=False)
     annotation = Column("annotation", String, nullable=True)
@@ -48,7 +48,7 @@ class Collection(Base):
     __tablename__ = "Collections"
 
     id = Column("id", Integer, Identity(start=1, increment=1), primary_key=True)
-    name = Column("name", String, nullable=False)
+    title = Column("title", String, nullable=False)
     user_id = Column("user_id", ForeignKey("Users.id", ondelete="CASCADE"), nullable=False)
 
 

@@ -20,9 +20,9 @@ async def clear(force=False):
             await session.execute(text('TRUNCATE TABLE "Roles" RESTART IDENTITY CASCADE'))
         await session.execute(text('TRUNCATE TABLE "Authors" RESTART IDENTITY CASCADE'))
         await session.execute(text('TRUNCATE TABLE "Books" RESTART IDENTITY CASCADE'))
-        await session.execute(text('TRUNCATE TABLE "Books Compilations" RESTART IDENTITY CASCADE'))
+        await session.execute(text('TRUNCATE TABLE "Books Collections" RESTART IDENTITY CASCADE'))
         await session.execute(text('TRUNCATE TABLE "Books Genres" RESTART IDENTITY CASCADE'))
-        await session.execute(text('TRUNCATE TABLE "Books Genres" RESTART IDENTITY CASCADE'))
+        await session.execute(text('TRUNCATE TABLE "Collections" RESTART IDENTITY CASCADE'))
         await session.execute(text('TRUNCATE TABLE "Genres" RESTART IDENTITY CASCADE'))
         await session.execute(text('TRUNCATE TABLE "Reviews" RESTART IDENTITY CASCADE'))
         await session.commit()
@@ -51,17 +51,17 @@ async def fill_authors():
 async def fill_books():
     async with async_session_maker() as session:
         books = [
-            Book(name='Book 1', year=2001, author_id=1, annotation='Annotation 1'),
-            Book(name='Book 2', year=2002, author_id=1, annotation='Annotation 2'),
-            Book(name='Book 3', year=2003, author_id=1, annotation='Annotation 3'),
+            Book(title='Book 1', year=2001, author_id=1, annotation='Annotation 1'),
+            Book(title='Book 2', year=2002, author_id=1, annotation='Annotation 2'),
+            Book(title='Book 3', year=2003, author_id=1, annotation='Annotation 3'),
 
-            Book(name='Book 4', year=2002, author_id=2, annotation='Annotation 4'),
-            Book(name='Book 5', year=2003, author_id=2, annotation='Annotation 5'),
-            Book(name='Book 6', year=2004, author_id=2, annotation='Annotation 6'),
+            Book(title='Book 4', year=2002, author_id=2, annotation='Annotation 4'),
+            Book(title='Book 5', year=2003, author_id=2, annotation='Annotation 5'),
+            Book(title='Book 6', year=2004, author_id=2, annotation='Annotation 6'),
 
-            Book(name='Book 7', year=2003, author_id=3, annotation='Annotation 7'),
-            Book(name='Book 8', year=2004, author_id=3, annotation='Annotation 8'),
-            Book(name='Book 9', year=2005, author_id=3, annotation='Annotation 9')
+            Book(title='Book 7', year=2003, author_id=3, annotation='Annotation 7'),
+            Book(title='Book 8', year=2004, author_id=3, annotation='Annotation 8'),
+            Book(title='Book 9', year=2005, author_id=3, annotation='Annotation 9')
         ]
 
         session.add_all(books)
@@ -121,9 +121,9 @@ async def fill_book_genres():
 async def fill_collections():
     async with async_session_maker() as session:
         collections = [
-            Collection(name="To be read", user_id=1),
-            Collection(name="Currently reading", user_id=1),
-            Collection(name="Read", user_id=1),
+            Collection(title="To be read", user_id=1),
+            Collection(title="Currently reading", user_id=1),
+            Collection(title="Read", user_id=1),
         ]
         session.add_all(collections)
         await session.commit()
@@ -149,13 +149,18 @@ async def fill_book_to_collections():
 async def fill_reviews():
     async with async_session_maker() as session:
         reviews = [
-            Review(user_id=1, book_id=1, rating=3, text="Text of User 1 Review on Book 1"),
-            Review(user_id=1, book_id=2, rating=4, text="Text of User 1 Review on Book 1"),
-            Review(user_id=1, book_id=3, rating=5, text="Text of User 1 Review on Book 1"),
+            Review(user_id=1, book_id=1, rating=1, text="Text of User 1 Review on Book 1"),
+            Review(user_id=2, book_id=1, rating=2, text="Text of User 2 Review on Book 1"),
+            Review(user_id=1, book_id=2, rating=3, text="Text of User 1 Review on Book 2"),
+            Review(user_id=2, book_id=2, rating=4, text="Text of User 2 Review on Book 2"),
+            Review(user_id=1, book_id=3, rating=5, text="Text of User 1 Review on Book 3"),
+            Review(user_id=2, book_id=3, rating=1, text="Text of User 2 Review on Book 3"),
         ]
+        session.add_all(reviews)
+        await session.commit()
 
 
-async def generate(force=False):
+async def generate(force=False, users_created=False):
     await clear(force=force)
     if force:
         await fill_roles()
@@ -163,15 +168,12 @@ async def generate(force=False):
     await fill_books()
     await fill_genres()
     await fill_book_genres()
-    # await fill_collections()
-    # await fill_book_to_collections()
-
-async def test():
-    async with async_session_maker() as session:
-        statement = select(Genre).where(Genre.id.in_([1, 3, 5, 7, 12]))
-        genres = (await session.execute(statement)).scalars().all()
-        print(genres)
+    if users_created:
+        await fill_collections()
+        await fill_book_to_collections()
+        await fill_reviews()
 
 if __name__ == '__main__':
-    # asyncio.run(generate(force=False))
-    asyncio.run(test())
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    asyncio.run(generate(force=False, users_created=True))
+

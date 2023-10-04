@@ -1,12 +1,13 @@
-import time
+# Check for authentication - IMPLICIT
+# Check for permissions (must be Admin to update book)
+# Check for corresponding book existence
+# Check for corresponding author existence
+# Check for corresponding genres existence
 
-import redis
+# Updating simple fields
+# Updating one-to-many relationships (book-authors)
+# Updating many-to-many relationships (genres-books)
 
-from config import CACHE_HOST, CACHE_HOST_PORT, CACHE_PASS
+# Committing changes
 
-r = redis.Redis(host=CACHE_HOST, port=CACHE_HOST_PORT, decode_responses=True, password=CACHE_PASS)
-
-r.set('foo', 'bar', ex=1)
-print(r.get('foo'))
-time.sleep(2)
-print(r.get('foo'))
+# Collecting additional data
