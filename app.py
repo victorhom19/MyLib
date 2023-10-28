@@ -1,17 +1,15 @@
 
 import uvicorn as uvicorn
-from fastapi import FastAPI, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from auth.database import get_async_session
 from config import FRONTEND_ORIGIN, BACKEND_HOST, BACKEND_PORT
-from models.models import User, Role
-from routes.auth_router import auth_router, register_router, current_user, reset_password_router, verify_router
+from routes.auth_router import auth_router, register_router, reset_password_router, verify_router
 from routes.authors_router import authors_router
 from routes.books_router import books_router
 from routes.collections_router import collections_router
-
+from routes.genres_router import genres_router
+from routes.reviews_router import reviews_router
 
 app = FastAPI()
 
@@ -51,12 +49,35 @@ app.include_router(
     tags=["auth"],
 )
 
+app.include_router(
+    books_router,
+    prefix="/books",
+    tags=["books"]
+)
 
+app.include_router(
+    authors_router,
+    prefix="/authors",
+    tags=["authors"]
+)
 
-app.include_router(books_router)
-app.include_router(authors_router)
-app.include_router(collections_router)
+app.include_router(
+    genres_router,
+    prefix="/genres",
+    tags=["genres"]
+)
 
+app.include_router(
+    collections_router,
+    prefix="/collections",
+    tags=["collections"]
+)
+
+app.include_router(
+    reviews_router,
+    prefix="/reviews",
+    tags=["reviews"]
+)
 
 
 if __name__ == '__main__':

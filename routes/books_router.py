@@ -1,3 +1,4 @@
+import json
 from typing import List, Union
 
 from fastapi import APIRouter, Depends, status, HTTPException, Response
@@ -6,33 +7,23 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from auth.database import get_async_session
+from cache.cache import get_cache_instance
 from models.models import Book, Author, User, Role, Review, Genre, GenreToBook
 from routes.auth_router import current_user
+from routes.models.books.create_book_model import CreateBookRequestModel, CreateBookResponseModel
+from routes.models.books.delete_book_model import DeleteBookModelResponse
 
-
-class BookModel(BaseModel):
-    title: str
-    author_id: int
-    year: int
-    annotation: str
-    genre_ids: List[int]
-
-
-class BookSearchModel(BaseModel):
-    search_query: Union[None, str]
-    genre_ids: Union[None, List[int]]
-    year_from: Union[None, int]
-    year_to: Union[None, int]
-    author_ids: Union[None, List[int]]
-
+from routes.models.books.get_book_model import GetBookResponseModel
+from routes.models.books.get_books_model import GetBooksResponseModel, GetBooksRequestModel
+from routes.models.books.update_book_model import UpdateBookRequestModel, UpdateBookResponseModel
 
 books_router = APIRouter()
 
 
-@books_router.get("/books/{book_id}")
+@books_router.get("/{book_id}")
 async def get_book(book_id: int,
                    response: Response,
-                   session: AsyncSession = Depends(get_async_session)):
+                   session: AsyncSession = Depends(get_async_session)) -> GetBookResponseModel:
 
     # Check for corresponding book existence
     book = await session.get(Book, book_id)
@@ -41,6 +32,12 @@ async def get_book(book_id: int,
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Book with id={book_id} not found"
         )
+
+    # Check for existing in cache
+    cache = get_cache_instance()
+    from_cache = cache.get(f'/books/{book_id}')
+    if from_cache is not None:
+        return GetBookResponseModel.parse_json(from_cache)
 
     # Select book author
     author = await session.get(Author, book.author_id)
@@ -60,50 +57,51 @@ async def get_book(book_id: int,
 
     # Format response
     response.status_code = status.HTTP_200_OK
-    res = {
-        "id": book.id,
-        "title": book.title,
-        "author": {
-            "id": author.id,
-            "name": author.name
-        },
-        "reviews": [
-            {
-                "id": review.id,
-                "user": {
-                    "id": user.id,
-                    "name": user.name
-                },
-                "rating": review.rating,
-                "text": review.text,
-                "created": review.created
-            }
-            for review, user in reviews_to_users
-        ],
-        "genres": [
-            {
-                "id": genre.id,
-                "name": genre.name
-            } for genre in genres
-        ],
-        "rating": book_rating,
-        "reviews_count": reviews_count,
-        "year": book.year,
-        "annotation": book.annotation
-    }
+    res = GetBookResponseModel(
+            id=book.id,
+            title=book.title,
+            author=GetBookResponseModel.AuthorModel(
+                id=author.id,
+                name=author.name
+            ),
+            genres=[
+                GetBookResponseModel.GenreModel(
+                    id=genre.id,
+                    name=genre.name
+                ) for genre in genres
+            ],
+            rating=book_rating,
+            reviews_count=reviews_count,
+            reviews=[
+                GetBookResponseModel.ReviewModel(
+                    id=review.id,
+                    user=GetBookResponseModel.UserModel(
+                        id=user.id,
+                        name=user.name
+                    ),
+                    rating=review.rating,
+                    text=review.text,
+                    created=review.created
+                ) for review, user in reviews_to_users
+            ],
+            year=book.year,
+            annotation=book.annotation
+        )
+
+    # Cache response
+    cache.set(f"/books/{book_id}", json.dumps(res.as_dict()))
 
     return res
 
 
-@books_router.get("/books")
-async def get_books(book_search: BookSearchModel,
+@books_router.get("/")
+async def get_books(book_search: GetBooksRequestModel,
                     response: Response,
-                    session: AsyncSession = Depends(get_async_session)):
+                    session: AsyncSession = Depends(get_async_session)) -> List[GetBooksResponseModel]:
 
     # Select books with corresponding authors initial statement
     statement = select(Book, Author).outerjoin(Author)\
         .where(Book.author_id == Author.id)\
-
 
     # Filter books by search phrase
     if book_search.search_query is not None:
@@ -140,35 +138,34 @@ async def get_books(book_search: BookSearchModel,
         genres = (await session.execute(statement)).scalars().all()
 
         # Format response
-        formatted_book = {
-            "id": book.id,
-            "title": book.title,
-            "author": {
-                "id": author.id,
-                "name": author.name
-            },
-            "genres": [
-                {
-                    "id": genre.id,
-                    "name": genre.name
-                } for genre in genres
+        response.status_code = status.HTTP_200_OK
+        book_model = GetBooksResponseModel(
+            id=book.id,
+            title=book.title,
+            author=GetBooksResponseModel.AuthorModel(
+                id=author.id,
+                name=author.name
+            ),
+            genres=[
+                GetBooksResponseModel.GenreModel(
+                    id=genre.id,
+                    name=genre.name
+                ) for genre in genres
             ],
-            "rating": book_rating,
-            "reviews_count": reviews_count,
-            "year": book.year,
-            "annotation": book.annotation
-        }
-        res.append(formatted_book)
+            rating=book_rating,
+            reviews_count=reviews_count,
+        )
 
-    response.status_code = status.HTTP_200_OK
+        res.append(book_model)
+
     return res
 
 
-@books_router.post("/books")
-async def create_book(new_book: BookModel,
+@books_router.post("/")
+async def create_book(new_book: CreateBookRequestModel,
                       response: Response,
                       user: User = Depends(current_user),
-                      session: AsyncSession = Depends(get_async_session)):
+                      session: AsyncSession = Depends(get_async_session)) -> CreateBookResponseModel:
 
     # Check for permissions (must be Admin to create book)
     user_role = await session.get(Role, user.role_id)
@@ -206,6 +203,7 @@ async def create_book(new_book: BookModel,
     )
     session.add(book)
     await session.commit()
+
     # Creating corresponding books-genres records
     for genre_id in new_book.genre_ids:
         genre_to_book = GenreToBook(
@@ -219,34 +217,33 @@ async def create_book(new_book: BookModel,
 
     # Format response
     response.status_code = status.HTTP_200_OK
-    res = {
-        "id": book.id,
-        "title": book.title,
-        "author": {
-            "id": author.id,
-            "name": author.name
-        },
-        "reviews": [],
-        "genres": [
-            {
-                "id": genre.id,
-                "name": genre.name
-            } for genre in genres
-        ],
-        "rating": 0,
-        "reviews_count": 0,
-        "year": book.year,
-        "annotation": book.annotation
-    }
+    res = CreateBookResponseModel(
+            id=book.id,
+            title=book.title,
+            author=CreateBookResponseModel.AuthorModel(
+                id=author.id,
+                name=author.name
+            ),
+            genres=[
+                CreateBookResponseModel.GenreModel(
+                    id=genre.id,
+                    name=genre.name
+                ) for genre in genres
+            ],
+            rating=0,
+            reviews_count=0,
+            year=book.year,
+            annotation=book.annotation
+        )
 
     return res
 
 
-@books_router.put("/books/{book_id}")
-async def update_book(book_id: int, new_book: BookModel,
+@books_router.put("/{book_id}")
+async def update_book(book_id: int, new_book: UpdateBookRequestModel,
                       response: Response,
                       user: User = Depends(current_user),
-                      session: AsyncSession = Depends(get_async_session)):
+                      session: AsyncSession = Depends(get_async_session)) -> UpdateBookResponseModel:
 
     # Check for permissions (must be Admin to update book)
     user_role = await session.get(Role, user.role_id)
@@ -306,6 +303,10 @@ async def update_book(book_id: int, new_book: BookModel,
     # Committing changes
     await session.commit()
 
+    # Invalidate cache
+    cache = get_cache_instance()
+    cache.delete(f'/books/{book_id}')
+
     # Collect additional data about book
     statement = select(Review, User).outerjoin(User, Review.user_id == User.id).where(Review.book_id == book.id)
     reviews_to_users = (await session.execute(statement)).all()
@@ -317,46 +318,45 @@ async def update_book(book_id: int, new_book: BookModel,
 
     # Format response
     response.status_code = status.HTTP_200_OK
-    res = {
-        "id": book.id,
-        "title": book.title,
-        "author": {
-            "id": author.id,
-            "name": author.name
-        },
-        "reviews": [
-            {
-                "id": review.id,
-                "user": {
-                    "id": user.id,
-                    "name": user.name
-                },
-                "rating": review.rating,
-                "text": review.text,
-                "created": review.created
-            }
-            for review, user in reviews_to_users
+    res = UpdateBookResponseModel(
+        id=book.id,
+        title=book.title,
+        author=UpdateBookResponseModel.AuthorModel(
+            id=author.id,
+            name=author.name
+        ),
+        genres=[
+            UpdateBookResponseModel.GenreModel(
+                id=genre.id,
+                name=genre.name
+            ) for genre in genres
         ],
-        "genres": [
-            {
-                "id": genre.id,
-                "name": genre.name
-            } for genre in genres
+        rating=book_rating,
+        reviews_count=reviews_count,
+        reviews=[
+            UpdateBookResponseModel.ReviewModel(
+                id=review.id,
+                user=UpdateBookResponseModel.UserModel(
+                    id=user.id,
+                    name=user.name
+                ),
+                rating=review.rating,
+                text=review.text,
+                created=review.created
+            ) for review, user in reviews_to_users
         ],
-        "rating": book_rating,
-        "reviews_count": reviews_count,
-        "year": book.year,
-        "annotation": book.annotation
-    }
+        year=book.year,
+        annotation=book.annotation
+    )
 
     return res
 
 
-@books_router.delete("/books/{book_id}")
+@books_router.delete("/{book_id}")
 async def delete_book(book_id: int,
                       response: Response,
                       user: User = Depends(current_user),
-                      session: AsyncSession = Depends(get_async_session)):
+                      session: AsyncSession = Depends(get_async_session)) -> DeleteBookModelResponse:
 
     # Check for permissions (must be Admin to delete book)
     user_role = await session.get(Role, user.role_id)
@@ -374,13 +374,21 @@ async def delete_book(book_id: int,
             detail=f"Book with id={book_id} does not exist"
         )
 
+    # Get name before delete
+    book_title = book.title
+
     # Committing changes
     await session.delete(book)
     await session.commit()
 
+    # Invalidate cache
+    cache = get_cache_instance()
+    cache.delete(f'/books/{book_id}')
+
     # Format response
     response.status_code = status.HTTP_200_OK
-    res = {
-        "removed": book_id
-    }
+    res = DeleteBookModelResponse(
+        id=book_id,
+        title=book_title
+    )
     return res

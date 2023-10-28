@@ -32,6 +32,7 @@ class Author(Base):
 
     id = Column("id", Integer, Identity(start=1, increment=1), primary_key=True)
     name = Column("name", String, nullable=False)
+    about = Column("about", String, nullable=False)
 
 
 class Book(Base):

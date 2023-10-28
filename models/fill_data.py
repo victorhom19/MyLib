@@ -40,9 +40,9 @@ async def fill_roles():
 async def fill_authors():
     async with async_session_maker() as session:
         authors = [
-            Author(name='Author 1'),
-            Author(name='Author 2'),
-            Author(name='Author 3')
+            Author(name='Author 1', about="About Author 1"),
+            Author(name='Author 2', about="About Author 2"),
+            Author(name='Author 3', about="About Author 3"),
         ]
         session.add_all(authors)
         await session.commit()
@@ -174,6 +174,5 @@ async def generate(force=False, users_created=False):
         await fill_reviews()
 
 if __name__ == '__main__':
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     asyncio.run(generate(force=False, users_created=True))
 
