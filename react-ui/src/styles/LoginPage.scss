@@ -1,0 +1,98 @@
+
+.LoginPage {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+
+    width: 800px;
+    height: 500px;
+
+    background: #BCCEF8;
+
+    border-radius: 30px;
+
+
+    h3 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        width: 100%;
+        height: 60px;
+
+        font-size: 20pt;
+
+        background: #4E5FFF;
+
+        border-radius: 30px 30px 0 0;
+
+        margin-bottom: 20px;
+    }
+
+    img {
+        width: 600px;
+    }
+
+    input {
+        width: 600px;
+        height: 60px;
+        padding-inline: 40px;
+        background: #FAF7F0;
+        color: #7F7F7F;
+        border: none;
+        outline: none;
+        box-sizing: border-box;
+        border-radius: 30px;
+    }
+
+    input::placeholder {
+        color: #7F7F7F;
+    }
+
+    input.Error {
+
+        outline: 3px solid #ff6363;
+    }
+
+    .ButtonBlock {
+
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 45px;
+
+        button {
+            width: 250px;
+            height: 60px;
+
+            border: none;
+            border-radius: 30px;
+
+            box-sizing: border-box;
+            margin-bottom: 2px;
+        }
+
+        #back-btn {
+            background: #98A8F8;
+        }
+
+        #continue-btn {
+            background: #617CFF;
+        }
+
+        button:active {
+
+            margin-top: 2px;
+            margin-bottom: 0;
+        }
+    }
+}

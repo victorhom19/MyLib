@@ -37,7 +37,7 @@ class UpdateBookResponseModel(BaseModel):
     title: str
     author: AuthorModel
     genres: List[GenreModel]
-    rating: int
+    rating: float
     reviews_count: int
     reviews: List[ReviewModel]
     year: int

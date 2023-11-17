@@ -28,6 +28,7 @@ class GetBooksResponseModel(BaseModel):
     genres: List[GenreModel]
     rating: float
     reviews_count: int
+    year: int
 
     def as_dict(self):
         return {

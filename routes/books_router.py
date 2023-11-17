@@ -49,7 +49,7 @@ async def get_book(book_id: int,
     book_rating = 0
     if reviews_count > 0:
         reviews, users = list(zip(*reviews_to_users))
-        book_rating = (sum([review.rating for review in reviews]) / reviews_count) if reviews_count > 0 else 0
+        book_rating = round((sum([review.rating for review in reviews]) / reviews_count), 2) if reviews_count > 0 else 0
 
     # Select genres
     statement = select(Genre).where(GenreToBook.genre_id == Genre.id, GenreToBook.book_id == book.id)
@@ -94,7 +94,7 @@ async def get_book(book_id: int,
     return res
 
 
-@books_router.get("/")
+@books_router.post("/list")
 async def get_books(book_search: GetBooksRequestModel,
                     response: Response,
                     session: AsyncSession = Depends(get_async_session)) -> List[GetBooksResponseModel]:
@@ -131,7 +131,7 @@ async def get_books(book_search: GetBooksRequestModel,
         statement = select(Review).where(Review.book_id == book.id)
         reviews = (await session.execute(statement)).scalars().all()
         reviews_count = len(reviews)
-        book_rating = (sum([review.rating for review in reviews]) / reviews_count) if reviews_count > 0 else 0
+        book_rating = round((sum([review.rating for review in reviews]) / reviews_count), 2) if reviews_count > 0 else 0
 
         # Select book genres
         statement = select(Genre).where(GenreToBook.book_id == book.id, Genre.id == GenreToBook.genre_id)
@@ -154,6 +154,7 @@ async def get_books(book_search: GetBooksRequestModel,
             ],
             rating=book_rating,
             reviews_count=reviews_count,
+            year=book.year
         )
 
         res.append(book_model)

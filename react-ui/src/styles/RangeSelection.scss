@@ -1,0 +1,57 @@
+.RangeSelection {
+
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+
+    color: #617CFF;
+
+    h3 {
+        width: 90%;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        background: #617CFF;
+
+        box-sizing: border-box;
+        padding: 10px 25px;
+
+        margin-bottom: 10px;
+
+        border-radius: 10px;
+    }
+
+    .RangeBody {
+        width: 80%;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+
+        color: #617CFF;
+
+        box-sizing: border-box;
+        padding-bottom: 20px;
+
+        input {
+            width: 100%;
+            color: #617CFF;
+            outline: none;
+
+            font-size: 14pt;
+
+            box-sizing: border-box;
+            padding: 5px 10px;
+
+            border: 1px solid black
+        }
+
+    }
+}

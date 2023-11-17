@@ -8,20 +8,42 @@ from typing import Optional
 from fastapi import Depends, Request, HTTPException
 from fastapi_users import BaseUserManager, IntegerIDMixin, schemas, models, exceptions
 from redis import StrictRedis
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from auth.database import get_user_db
+from auth.database import get_user_db, get_async_session
 from cache.cache import get_cache_instance
 from config import BACKEND_USER_MANAGER_SECRET_KEY, MAIL_SERVICE_EMAIL, MAIL_SERVICE_PASS, \
     MAIL_SERVICE_TOKEN_EXPIRATION_TIME, MAIL_SERVICE_SMTP_SERVER
-from models.models import User
+from models.models import User, Collection
 
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, uuid.UUID]):
     reset_password_token_secret = BACKEND_USER_MANAGER_SECRET_KEY
     verification_token_secret = BACKEND_USER_MANAGER_SECRET_KEY
 
-    async def on_after_register(self, user: User, request: Optional[Request] = None):
+    async def on_after_register(self, user: User, request: Optional[Request] = None,
+                                session: AsyncSession = Depends(get_async_session)):
         print(f"User {user.id} has registered.")
+
+        # Create Base collections
+        base_collections = [
+            Collection(
+                title="Буду читать",
+                user_id=user.id
+            ),
+            Collection(
+                title="Читаю",
+                user_id=user.id
+            ),
+            Collection(
+                title="Прочитано",
+                user_id=user.id
+            ),
+        ]
+
+        session.add_all(base_collections)
+        await session.commit()
+
 
     async def on_after_request_verify(self,
                                       user: User,

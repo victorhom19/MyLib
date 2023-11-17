@@ -123,6 +123,10 @@ async def create_review(new_review: CreateReviewRequestModel,
     # Committing changes
     await session.commit()
 
+    # Invalidate cache
+    cache = get_cache_instance()
+    cache.delete(f'/books/{book.id}')
+
     # Format response
     response.status_code = status.HTTP_200_OK
     res = CreateReviewResponseModel(
@@ -163,6 +167,7 @@ async def delete_review(review_id: int,
         )
 
     review_owner = await session.get(User, review.user_id)
+    book_id = review.book_id
 
     # Committing changes
     await session.delete(review)
@@ -171,6 +176,7 @@ async def delete_review(review_id: int,
     # Invalidate cache
     cache = get_cache_instance()
     cache.delete(f'/reviews/{review_id}')
+    cache.delete(f'/books/{book_id}')
 
     # Format response
     response.status_code = status.HTTP_200_OK

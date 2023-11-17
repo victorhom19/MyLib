@@ -1,34 +1,38 @@
 import {createSlice} from "@reduxjs/toolkit";
 
+const Roles = {
+    USER: "User",
+    MODERATOR: "Moderator",
+    ADMIN: "Admin"
+}
 
 const initialState = {
     logged: false,
     id: null,
-    username: null
+    name: null,
+    email: null,
+    role: null
 }
 
 export const authSlice = createSlice({
     name: 'auth',
     initialState: initialState,
     reducers: {
-        signup: (state, action) => {
-            const {id, username} = action.payload
-            state.logged = true
-            state.id = id
-            state.username = username
-            return state
-        },
         login: (state, action) => {
-            const {id, username} = action.payload
+            const {id, name, email, role} = action.payload
             state.logged = true
             state.id = id
-            state.username = username
+            state.name = name
+            state.email = email
+            state.role = role
             return state
         },
         logout: (state, action) => {
             state.logged = false
-            state.userId = null
-            state.userName = null
+            state.id = null
+            state.name = null
+            state.email = null
+            state.email = null
             return state
         }
     }

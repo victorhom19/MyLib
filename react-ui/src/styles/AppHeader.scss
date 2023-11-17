@@ -1,0 +1,92 @@
+.AppHeader {
+    height: 80px;
+    width: 100%;
+
+    background: #BCCEF8;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 30px;
+
+    box-sizing: border-box;
+    padding: 10px 50px;
+
+
+    input {
+        width: 500px;
+        height: 50px;
+
+        background: #98A8F8;
+
+        margin-left: auto;
+        margin-right: 70px;
+
+        box-sizing: border-box;
+        padding-inline: 50px;
+
+        border-radius: 60px;
+        border: none;
+    }
+
+    input::placeholder {
+        color: #FAF7F0;
+        font-weight: normal;
+    }
+
+    input:focus {
+        outline: none;
+    }
+
+    button {
+        height: 50px;
+
+        box-sizing: border-box;
+        background: #98A8F8;
+        border-radius: 60px;
+        border: none;
+
+        font-weight: bold;
+        color: #FAF7F0;
+
+        transition: background-color 0.3s;
+
+        padding: 12px 40px;
+        margin-bottom: 2px;
+
+    }
+
+    button:active, #login-button:active, #logout-button:active, #register-button:active {
+        margin-bottom: 0;
+        margin-top: 2px;
+        transition: 0.01s;
+    }
+
+    button.Active {
+        background: #617CFF;
+    }
+
+    #login-button, #logout-button, #register-button, #user-button {
+        background: #617CFF;
+    }
+
+    .UserPopup {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        right: 20px;
+        top: 80px;
+
+        button {
+            border-radius: 0;
+            margin: 0;
+            transition: 1s;
+        }
+
+        button:active {
+            background: #617CFF;
+            transition: 0.05s;
+        }
+    }
+
+}

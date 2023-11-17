@@ -1,0 +1,391 @@
+
+
+.SingleBookPage {
+    width: 80%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+
+    gap: 30px;
+
+    background: #98A8F833;
+
+    box-sizing: border-box;
+    padding: 20px 40px;
+
+    > .Header {
+        position: relative;
+
+        width: 100%;
+        height: 250px;
+        background: #617CFF;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+
+        border-radius: 50px;
+
+        box-sizing: border-box;
+        padding: 20px 350px;
+
+        .Title {
+            font-size: 60pt;
+        }
+
+        .AuthorYear {
+            font-size: 40pt;
+        }
+
+        .Rating {
+
+            img {
+                width: 30px;
+                padding-bottom: 5px;
+            }
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+
+            box-sizing: border-box;
+            margin-top: 10px;
+
+            color: #FF8412;
+            font-size: 24pt;
+        }
+
+        .Image {
+            position: absolute;
+            top: 55px;
+            left: 50px;
+
+            width: 250px;
+            height: 340px;
+
+            box-sizing: border-box;
+            border: 4px solid black;
+            border-radius: 30px;
+
+            background: white;
+        }
+    }
+
+    .AnnotationBlock {
+        width: 450px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+
+        .Header {
+            width: 100%;
+            background: #617CFF;
+            box-sizing: border-box;
+            padding: 10px 20px;
+            border-radius: 20px;
+
+            font-size: 20pt;
+        }
+
+        .Body {
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background: #FAF7F0;
+            border-radius: 20px;
+
+            box-sizing: border-box;
+            padding: 15px 20px;
+
+            .TextWrapper {
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 6; /* number of lines to show */
+                line-clamp: 6;
+                -webkit-box-orient: vertical;
+
+                color: black;
+
+                font-size: 18pt;
+            }
+
+            .TextWrapper.Expanded {
+                overflow: auto;
+                display: flex;
+            }
+
+        }
+
+        button {
+            margin-left: 20px;
+            align-self: start;
+
+            border: none;
+            background: transparent;
+
+            color: #617CFF;
+        }
+    }
+
+    .ReviewsBlock {
+        width: 450px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+
+        > .Header {
+            width: 100%;
+            background: #617CFF;
+            box-sizing: border-box;
+            padding: 10px 20px;
+            border-radius: 20px;
+
+            font-size: 20pt;
+        }
+
+        .Body {
+
+            width: 100%;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
+            gap: 20px;
+
+            background: #FAF7F0;
+            border-radius: 20px;
+
+            box-sizing: border-box;
+            padding: 15px 20px;
+
+            .ReviewCard {
+                width: 100%;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+
+                border: 2px solid #617CFF;
+                border-radius: 20px;
+
+                box-sizing: border-box;
+                padding: 15px 5px;
+
+                .Header {
+                    width: 100%;
+
+                    box-sizing: border-box;
+                    padding: 10px;
+
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-self: center;
+                    background: transparent;
+
+                    >img {
+                        width: 50px;
+                    }
+
+                    .UserDate {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: start;
+                        margin: 0 auto 0 10px;
+
+                        .User {
+                            color: #4E5FFF;
+                            font-size: 14pt;
+                        }
+
+                        .Date {
+                            color: #617CFF;
+                            font-size: 10pt;
+                        }
+                    }
+
+                    .Rating {
+                        img {
+                            width: 25px;
+                            padding-bottom: 2px;
+                        }
+
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 5px;
+
+                        box-sizing: border-box;
+
+                        color: #FF8412;
+                        font-size: 24pt;
+                    }
+                }
+
+                .Body {
+                    display: flex;
+                    justify-content: start;
+                    align-items: start;
+
+                    padding: 5px 15px;
+
+                    .TextWrapper {
+                        width: 100%;
+
+                        overflow: hidden;
+                        display: -webkit-box;
+                        -webkit-line-clamp: 6; /* number of lines to show */
+                        line-clamp: 6;
+                        -webkit-box-orient: vertical;
+
+                        color: black;
+
+                        font-size: 12pt;
+                    }
+
+                    .TextWrapper.Expanded {
+                        overflow: auto;
+                        display: flex;
+                    }
+                }
+
+
+
+                button {
+                    margin-left: 15px;
+                    margin-top: 5px;
+                    align-self: start;
+
+                    border: none;
+                    background: transparent;
+
+                    color: #617CFF;
+
+                    font-size: 10pt;
+                }
+            }
+
+            .CreateReviewCard {
+                width: 100%;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+
+                border: 5px solid #4E5FFF;
+                border-radius: 20px;
+
+                box-sizing: border-box;
+                padding: 15px 5px;
+
+                .Header {
+                    width: 100%;
+
+                    box-sizing: border-box;
+                    padding: 10px;
+
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-self: center;
+                    background: transparent;
+
+                    >img {
+                        width: 50px;
+                    }
+
+
+
+                    .User {
+                        color: #4E5FFF;
+                        font-size: 14pt;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: start;
+                        margin: 0 auto 0 10px;
+                    }
+
+                    .RatingBar {
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: center;
+                        align-items: center;
+
+                        box-sizing: border-box;
+                        padding-top: 5px;
+
+                        gap: 5px;
+
+                        .Star > img {
+                            aspect-ratio: 1;
+                            width: 30px;
+                        }
+                    }
+
+                }
+
+                .Body {
+                    display: flex;
+                    justify-content: start;
+                    align-items: start;
+
+                    padding: 5px 15px;
+
+
+                    textarea {
+                        width: 100%;
+                        resize: none;
+                        border: none;
+                        outline: none;
+                        box-sizing: border-box;
+                        padding: 0 5px;
+                        color: #7F7F7F;
+                        height: 200px;
+                        background: #FAF7F0;
+                    }
+                }
+
+                button {
+                    border: none;
+                    background: transparent;
+
+                    color: #617CFF;
+                    font-weight: bolder;
+                    font-size: 16pt;
+                    margin-top: 15px;
+                }
+            }
+        }
+
+
+        .RatingBar {
+
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+
+            img {
+                width: 50px;
+            }
+        }
+    }
+}

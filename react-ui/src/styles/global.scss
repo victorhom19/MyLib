@@ -1,0 +1,19 @@
+$background-white: #FAF7F0;
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Roboto, sans-serif;
+    font-weight: bold;
+    font-size: 16pt;
+    color: $background-white;
+}
+
+.App {
+    background: $background-white;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
