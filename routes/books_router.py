@@ -33,11 +33,11 @@ async def get_book(book_id: int,
             detail=f"Book with id={book_id} not found"
         )
 
-    # Check for existing in cache
-    cache = get_cache_instance()
-    from_cache = cache.get(f'/books/{book_id}')
-    if from_cache is not None:
-        return GetBookResponseModel.parse_json(from_cache)
+    # # Check for existing in cache
+    # cache = get_cache_instance()
+    # from_cache = cache.get(f'/books/{book_id}')
+    # if from_cache is not None:
+    #     return GetBookResponseModel.parse_json(from_cache)
 
     # Select book author
     author = await session.get(Author, book.author_id)
@@ -88,8 +88,8 @@ async def get_book(book_id: int,
             annotation=book.annotation
         )
 
-    # Cache response
-    cache.set(f"/books/{book_id}", json.dumps(res.as_dict()))
+    # # Cache response
+    # cache.set(f"/books/{book_id}", json.dumps(res.as_dict()))
 
     return res
 
@@ -304,9 +304,9 @@ async def update_book(book_id: int, new_book: UpdateBookRequestModel,
     # Committing changes
     await session.commit()
 
-    # Invalidate cache
-    cache = get_cache_instance()
-    cache.delete(f'/books/{book_id}')
+    # # Invalidate cache
+    # cache = get_cache_instance()
+    # cache.delete(f'/books/{book_id}')
 
     # Collect additional data about book
     statement = select(Review, User).outerjoin(User, Review.user_id == User.id).where(Review.book_id == book.id)
@@ -382,9 +382,9 @@ async def delete_book(book_id: int,
     await session.delete(book)
     await session.commit()
 
-    # Invalidate cache
-    cache = get_cache_instance()
-    cache.delete(f'/books/{book_id}')
+    # # Invalidate cache
+    # cache = get_cache_instance()
+    # cache.delete(f'/books/{book_id}')
 
     # Format response
     response.status_code = status.HTTP_200_OK

@@ -8,6 +8,8 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import BooksPage from "./pages/BooksPage";
 import SingleBookPage from "./pages/SingleBookPage";
+import CollectionsPage from "./pages/CollectionsPage";
+import CreationPanel from "./pages/CreationPanel";
 
 
 const _switchPart = (navMode) => {
@@ -27,11 +29,25 @@ const _switchPart = (navMode) => {
                     <BooksPage />
                 </>
             )
+        case NavModes.COLLECTIONS:
+            return (
+                <>
+                    <AppHeader />
+                    <CollectionsPage />
+                </>
+            )
         case NavModes.BOOK:
             return (
                 <>
                     <AppHeader />
                     <SingleBookPage />
+                </>
+            )
+        case NavModes.CREATION:
+            return (
+                <>
+                    <AppHeader />
+                    <CreationPanel />
                 </>
             )
     }

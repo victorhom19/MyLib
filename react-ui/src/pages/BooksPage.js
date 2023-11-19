@@ -106,7 +106,7 @@ const BookCard = ({book}) => {
                     {book.reviews_count}
                 </div>
             </div>
-            <div className={"Image"}>dsfsdf</div>
+            <div className={"Image"} />
             <div className={"About"}>
                 <div className={"Title"}>{book.title}</div>
                 <div className={"AuthorYear"}>{book.author.name} – {book.year}</div>
@@ -142,7 +142,9 @@ const BooksList = ({books, booksPerRow, rowsPerPage}) => {
                     else return prev
                 })}>{"<"}</button>
                 {Array.from(Array(totalPages).keys()).map(k =>
-                    <button className={"Page " + (currentPage === k ? "Active" : null)}>{k+1}</button>
+                    <button className={"Page " + (currentPage === k ? "Active" : null)}
+                    onClick={() => setCurrentPage(k)}
+                >{k+1}</button>
                 )}
                 <button className={"Control"} onClick={() => setCurrentPage(prev => {
                     if (prev + 1 < totalPages) return prev + 1
@@ -177,6 +179,7 @@ const BooksPage = () => {
         .then(res => res.json())
         .then(setCallback)
     }
+
 
     useEffect(() => {
         let timer = setTimeout(() => {

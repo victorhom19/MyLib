@@ -23,11 +23,11 @@ async def get_author(author_id: int,
                      response: Response,
                      session: AsyncSession = Depends(get_async_session)) -> GetAuthorResponseModel:
 
-    # Check for existing in cache
-    cache = get_cache_instance()
-    from_cache = cache.get(f'/authors/{author_id}')
-    if from_cache is not None:
-        return GetAuthorResponseModel.parse_json(from_cache)
+    # # Check for existing in cache
+    # cache = get_cache_instance()
+    # from_cache = cache.get(f'/authors/{author_id}')
+    # if from_cache is not None:
+    #     return GetAuthorResponseModel.parse_json(from_cache)
 
     # Check for corresponding author existence
     author = await session.get(Author, author_id)
@@ -74,8 +74,8 @@ async def get_author(author_id: int,
         books=books_list
     )
 
-    # Cache response
-    cache.set(f"/authors/{author.id}", json.dumps(res.as_dict()))
+    # # Cache response
+    # cache.set(f"/authors/{author.id}", json.dumps(res.as_dict()))
 
     return res
 
@@ -198,9 +198,9 @@ async def update_author(author_id: int, new_author: UpdateAuthorRequestModel,
     # Committing changes
     await session.commit()
 
-    # Invalidate cache
-    cache = get_cache_instance()
-    cache.delete(f'/authors/{author.id}')
+    # # Invalidate cache
+    # cache = get_cache_instance()
+    # cache.delete(f'/authors/{author.id}')
 
     # Collect additional data about author
     statement = select(Book).where(Book.author_id == author.id)
@@ -271,9 +271,9 @@ async def delete_author(author_id: int,
     await session.delete(author)
     await session.commit()
 
-    # Invalidate cache
-    cache = get_cache_instance()
-    cache.delete(f'/authors/{author.id}')
+    # # Invalidate cache
+    # cache = get_cache_instance()
+    # cache.delete(f'/authors/{author.id}')
 
     # Format response
     response.status_code = status.HTTP_200_OK

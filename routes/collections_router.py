@@ -26,11 +26,11 @@ async def get_collection(collection_id: int,
                          response: Response,
                          session: AsyncSession = Depends(get_async_session)) -> GetCollectionResponseModel:
 
-    # Check for existing in cache
-    cache = get_cache_instance()
-    from_cache = cache.get(f'/collections/{collection_id}')
-    if from_cache is not None:
-        return GetCollectionResponseModel.parse_json(from_cache)
+    # # Check for existing in cache
+    # cache = get_cache_instance()
+    # from_cache = cache.get(f'/collections/{collection_id}')
+    # if from_cache is not None:
+    #     return GetCollectionResponseModel.parse_json(from_cache)
 
     collection = await session.get(Collection, collection_id)
     if collection is None:
@@ -74,9 +74,9 @@ async def get_collection(collection_id: int,
         title=collection.title,
         books=books_list
     )
-
-    # Cache response
-    cache.set(f"/collections/{collection.id}", json.dumps(res.as_dict()))
+    #
+    # # Cache response
+    # cache.set(f"/collections/{collection.id}", json.dumps(res.as_dict()))
 
     return res
 
@@ -213,9 +213,9 @@ async def update_collection(collection_id: int,
     # Committing changes
     await session.commit()
 
-    # Invalidate cache
-    cache = get_cache_instance()
-    cache.delete(f'/collections/{collection_id}')
+    # # Invalidate cache
+    # cache = get_cache_instance()
+    # cache.delete(f'/collections/{collection_id}')
 
     # Collect additional data about collection books
     statement = select(Book).where(BookToCollection.book_id == Book.id, BookToCollection.collection_id == collection.id)
@@ -284,9 +284,9 @@ async def delete_collection(collection_id: int,
     await session.delete(collection)
     await session.commit()
 
-    # Invalidate cache
-    cache = get_cache_instance()
-    cache.delete(f'/collections/{collection.id}')
+    # # Invalidate cache
+    # cache = get_cache_instance()
+    # cache.delete(f'/collections/{collection.id}')
 
     # Format response
     response.status_code = status.HTTP_200_OK

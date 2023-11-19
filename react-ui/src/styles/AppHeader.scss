@@ -70,7 +70,13 @@
         background: #617CFF;
     }
 
+    #user-button {
+        width: 200px;
+    }
+
     .UserPopup {
+        z-index: 999;
+
         position: absolute;
         display: flex;
         flex-direction: column;
@@ -81,12 +87,77 @@
             border-radius: 0;
             margin: 0;
             transition: 1s;
+
+        }
+
+        button:last-child {
+            border-radius: 0 0 20px 20px;
         }
 
         button:active {
             background: #617CFF;
             transition: 0.05s;
         }
+    }
+
+
+
+    .SearchPopup {
+        z-index: 999;
+
+        width: 450px;
+
+        max-height: 500px;
+
+        overflow-y: auto;
+
+        background: #FAF7F0;
+
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+
+        box-sizing: border-box;
+        padding: 10px 10px;
+
+        gap: 5px;
+
+        right: 375px;
+        top: 65px;
+
+        border: 2px solid #7F7F7F;
+        border-width: 1px 2px 2px 2px;
+
+        > .Book {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+
+            box-sizing: border-box;
+            padding: 5px 20px 5px 30px;
+
+            color: black;
+            font-size: 14pt;
+
+            border-radius: 10px;
+
+            text-align: start;
+
+        }
+
+        > .Book:hover {
+            background: #d7d7d7;
+        }
+
+        > .Book {
+            background: transparent;
+            border: none;
+            transition: 0.02s;
+        }
+    }
+
+    .SearchPopup.Shifted {
+        right: 555px;
     }
 
 }

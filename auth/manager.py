@@ -8,41 +8,48 @@ from typing import Optional
 from fastapi import Depends, Request, HTTPException
 from fastapi_users import BaseUserManager, IntegerIDMixin, schemas, models, exceptions
 from redis import StrictRedis
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 
 from auth.database import get_user_db, get_async_session
 from cache.cache import get_cache_instance
 from config import BACKEND_USER_MANAGER_SECRET_KEY, MAIL_SERVICE_EMAIL, MAIL_SERVICE_PASS, \
-    MAIL_SERVICE_TOKEN_EXPIRATION_TIME, MAIL_SERVICE_SMTP_SERVER
+    MAIL_SERVICE_TOKEN_EXPIRATION_TIME, MAIL_SERVICE_SMTP_SERVER, DB_USER, DB_PASS, DB_HOST, DB_HOST_PORT, DB_NAME
 from models.models import User, Collection
+
+
+DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_HOST_PORT}/{DB_NAME}"
+
+
+engine = create_async_engine(DATABASE_URL)
+async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, uuid.UUID]):
     reset_password_token_secret = BACKEND_USER_MANAGER_SECRET_KEY
     verification_token_secret = BACKEND_USER_MANAGER_SECRET_KEY
 
-    async def on_after_register(self, user: User, request: Optional[Request] = None,
-                                session: AsyncSession = Depends(get_async_session)):
+    async def on_after_register(self, user: User, request: Optional[Request] = None):
         print(f"User {user.id} has registered.")
 
-        # Create Base collections
-        base_collections = [
-            Collection(
-                title="Буду читать",
-                user_id=user.id
-            ),
-            Collection(
-                title="Читаю",
-                user_id=user.id
-            ),
-            Collection(
-                title="Прочитано",
-                user_id=user.id
-            ),
-        ]
+        async with async_session_maker() as session:
+            # Create Base collections
+            base_collections = [
+                Collection(
+                    title="Буду читать",
+                    user_id=user.id
+                ),
+                Collection(
+                    title="Читаю",
+                    user_id=user.id
+                ),
+                Collection(
+                    title="Прочитано",
+                    user_id=user.id
+                ),
+            ]
 
-        session.add_all(base_collections)
-        await session.commit()
+            session.add_all(base_collections)
+            await session.commit()
 
 
     async def on_after_request_verify(self,

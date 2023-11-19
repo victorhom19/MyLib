@@ -23,11 +23,11 @@ async def get_genre(genre_id: int,
                     response: Response,
                     session: AsyncSession = Depends(get_async_session)) -> GetGenreResponseModel:
 
-    # Check for existing in cache
-    cache = get_cache_instance()
-    from_cache = cache.get(f'/genres/{genre_id}')
-    if from_cache is not None:
-        return GetGenreResponseModel.parse_json(from_cache)
+    # # Check for existing in cache
+    # cache = get_cache_instance()
+    # from_cache = cache.get(f'/genres/{genre_id}')
+    # if from_cache is not None:
+    #     return GetGenreResponseModel.parse_json(from_cache)
 
     genre = await session.get(Genre, genre_id)
     if genre is None:
@@ -43,8 +43,8 @@ async def get_genre(genre_id: int,
         name=genre.name
     )
 
-    # Cache response
-    cache.set(f"/genres/{genre.id}", json.dumps(res.as_dict()))
+    # # Cache response
+    # cache.set(f"/genres/{genre.id}", json.dumps(res.as_dict()))
 
     return res
 
@@ -162,9 +162,9 @@ async def update_genre(genre_id: int,
     # Committing changes
     await session.commit()
 
-    # Invalidate cache
-    cache = get_cache_instance()
-    cache.delete(f'/genres/{genre.id}')
+    # # Invalidate cache
+    # cache = get_cache_instance()
+    # cache.delete(f'/genres/{genre.id}')
 
     # Format response
     response.status_code = status.HTTP_200_OK
@@ -205,9 +205,9 @@ async def delete_genre(genre_id: int,
     await session.delete(genre)
     await session.commit()
 
-    # Invalidate cache
-    cache = get_cache_instance()
-    cache.delete(f'/genres/{genre.id}')
+    # # Invalidate cache
+    # cache = get_cache_instance()
+    # cache.delete(f'/genres/{genre.id}')
 
     # Format response
     response.status_code = status.HTTP_200_OK

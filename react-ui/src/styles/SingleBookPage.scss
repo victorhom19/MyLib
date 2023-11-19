@@ -30,9 +30,10 @@
         border-radius: 50px;
 
         box-sizing: border-box;
-        padding: 20px 350px;
+        padding: 20px 50px 20px 330px;
 
         .Title {
+            width: 100%;
             font-size: 60pt;
         }
 
@@ -59,20 +60,85 @@
             font-size: 24pt;
         }
 
-        .Image {
+        .BookPreview {
             position: absolute;
             top: 55px;
             left: 50px;
 
             width: 250px;
-            height: 340px;
+            height: 400px;
 
-            box-sizing: border-box;
-            border: 4px solid black;
-            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
 
-            background: white;
+            gap: 10px;
+
+            .Image {
+
+                width: 100%;
+                height: 100%;
+
+                box-sizing: border-box;
+                border: 4px solid black;
+                border-radius: 30px;
+
+                background: white;
+            }
+
+            button {
+                background: #4E5FFF;
+                border: none;
+                border-radius: 30px;
+                padding: 10px 40px;
+            }
+
+            .AddToCollectionPopup {
+
+                position: absolute;
+                top: 420px;
+
+                width: 200px;
+
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+
+                border: 4px solid #617CFF;
+
+                border-radius: 20px;
+                background: white;
+                padding: 10px 20px;
+
+                > .Collection {
+
+                    width: 100%;
+
+                    background: transparent;
+                    border: none;
+
+                    display: flex;
+                    justify-content: start;
+
+                    color: #617CFF;
+
+                    box-sizing: border-box;
+                    padding: 8px 12px;
+
+                    border-radius: 10px;
+                }
+
+                > .Collection:hover {
+                    background: #BCCEF8;
+                    color: #FAF7F0;
+                }
+            }
         }
+
+
     }
 
     .AnnotationBlock {

@@ -23,11 +23,11 @@ async def get_review(review_id: int,
                      response: Response,
                      session: AsyncSession = Depends(get_async_session)) -> GetReviewResponseModel:
 
-    # Check for existing in cache
-    cache = get_cache_instance()
-    from_cache = cache.get(f'/reviews/{review_id}')
-    if from_cache is not None:
-        return GetReviewResponseModel.parse_json(from_cache)
+    # # Check for existing in cache
+    # cache = get_cache_instance()
+    # from_cache = cache.get(f'/reviews/{review_id}')
+    # if from_cache is not None:
+    #     return GetReviewResponseModel.parse_json(from_cache)
 
     # Check for corresponding review existence
     review = await session.get(Review, review_id)
@@ -53,8 +53,8 @@ async def get_review(review_id: int,
         created=review.created
     )
 
-    # Cache response
-    cache.set(f"/reviews/{review.id}", json.dumps(res.as_dict()))
+    # # Cache response
+    # cache.set(f"/reviews/{review.id}", json.dumps(res.as_dict()))
 
     return res
 
@@ -173,10 +173,10 @@ async def delete_review(review_id: int,
     await session.delete(review)
     await session.commit()
 
-    # Invalidate cache
-    cache = get_cache_instance()
-    cache.delete(f'/reviews/{review_id}')
-    cache.delete(f'/books/{book_id}')
+    # # Invalidate cache
+    # cache = get_cache_instance()
+    # cache.delete(f'/reviews/{review_id}')
+    # cache.delete(f'/books/{book_id}')
 
     # Format response
     response.status_code = status.HTTP_200_OK

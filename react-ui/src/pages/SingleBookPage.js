@@ -61,10 +61,11 @@ const CreateReviewCard = ({book, setUpdateTrigger}) => {
     )
 }
 
-const ReviewCard = ({review}) => {
+const ReviewCard = ({review, setBook}) => {
 
     const [expanded, setExpanded] = useState(false)
     const [clamped, setClamped] = useState(false)
+    const {logged, id, role} = useSelector(state => state.auth)
 
     const ref = useRef()
 
@@ -75,6 +76,15 @@ const ReviewCard = ({review}) => {
     useEffect(() => {
         setClamped(expanded || ref.current.scrollHeight > ref.current.clientHeight)
     }, [])
+
+    const fetchDeleteReview = () => {
+        fetch(`${process.env.REACT_APP_WEB_APP_URI}/reviews/${review.id}`, {
+            method: 'DELETE',
+            credentials: 'include'
+        })
+        .then(res => res.json())
+        .then(deleted => setBook(prev => ({...prev, reviews: prev.reviews.filter(r => r.id !== deleted.id)})))
+    }
 
     return (
         <div className={"ReviewCard"}>
@@ -94,12 +104,16 @@ const ReviewCard = ({review}) => {
             </div>
             {clamped ? <button
                 onClick={() => setExpanded(prev => !prev)}>{expanded ? "Свернуть" : "Развернуть"}</button> : null}
+            {logged && (id === review.user.id || ["MODERATOR", "ADMIN"].includes(role.name)) ?
+                <button className={"DeleteReviewButton"} onClick={fetchDeleteReview}>Удалить отзыв</button>
+                : null
+            }
         </div>
     )
 }
 
 
-const ReviewsBlock = ({book, setUpdateTrigger}) => {
+const ReviewsBlock = ({book, setUpdateTrigger, setBook}) => {
 
     const auth = useSelector(state => state.auth)
 
@@ -107,7 +121,7 @@ const ReviewsBlock = ({book, setUpdateTrigger}) => {
         <div className={"ReviewsBlock"}>
             <div className={"Header"}>Отзывы</div>
             <div className={"Body"}>
-                {book.reviews.map(review => <ReviewCard review={review} />)}
+                {book.reviews.map(review => <ReviewCard review={review} setBook={setBook}/>)}
                 {auth.id ? <CreateReviewCard book={book} setUpdateTrigger={setUpdateTrigger}/> : null}
             </div>
         </div>
@@ -129,12 +143,54 @@ const AnnotationBlock = ({text}) => {
     )
 }
 
+const AddToCollectionPopup = ({book, setShowPopup}) => {
+
+    const [collections, setCollections] = useState([])
+
+    useEffect(() => {
+        fetchCollections()
+    }, [])
+
+    const fetchCollections = () => {
+        fetch(`${process.env.REACT_APP_WEB_APP_URI}/collections`, {
+            method: 'GET',
+            credentials: 'include'
+        })
+            .then(res => res.json())
+            .then(setCollections)
+    }
+
+    const fetchAddToCollection = async (collection) => {
+        await fetch(`${process.env.REACT_APP_WEB_APP_URI}/collections/${collection.id}`, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: collection.title,
+                book_ids: [...collection.books.map(b => b.id), book.id]
+            })
+        })
+    }
+
+    return (
+        <div className={"AddToCollectionPopup"} onBlur={() => setShowPopup(false)}>
+            {collections.map(collection => <div key={collection.id} className={'Collection'}
+                onClick={() => fetchAddToCollection(collection)}
+            >{collection.title}</div> )}
+        </div>
+    )
+}
+
 const SingleBookPage = () => {
 
     const [book, setBook] = useState()
     const navMode = useSelector(state => state.nav)
     const [updateTrigger, setUpdateTrigger] = useState(0)
-
+    const {logged, name} = useSelector(state => state.auth)
+    
+    const [showPopup, setShowPopup] = useState(false)
 
     const fetchBook = (setCallback) => {
         fetch(`${process.env.REACT_APP_WEB_APP_URI}/books/${navMode.id}`, {
@@ -147,7 +203,7 @@ const SingleBookPage = () => {
 
     useEffect(() => {
         fetchBook(setBook)
-    }, [updateTrigger])
+    }, [updateTrigger, navMode.id])
 
 
     return (
@@ -159,10 +215,17 @@ const SingleBookPage = () => {
                     <img src={RatingIcon}/>
                     {book.rating}
                 </div>
-                <div className={"Image"}></div>
+                <div className={"BookPreview"}>
+                    <div className={"Image"}></div>
+                    {logged ? <button onClick={() => setShowPopup(prev => !prev)}>
+                        {!showPopup ? "Добавить" : "Скрыть"}
+                    </button> : null}
+                    {showPopup ? <AddToCollectionPopup book={book} setShowPopup={setShowPopup}/> : null}
+                </div>
+
             </div>
             <AnnotationBlock text={book.annotation}/>
-            <ReviewsBlock book={book} setUpdateTrigger={setUpdateTrigger}/>
+            <ReviewsBlock book={book} setUpdateTrigger={setUpdateTrigger} setBook={setBook}/>
         </div> : null
     )
 }
