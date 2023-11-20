@@ -1,14 +1,14 @@
 import {useState} from "react";
 import 'src/styles/RangeSelection.scss'
 
-const RangeSelection = ({title, setFrom, setTo}) => {
+const RangeSelection = ({id, title, setFrom, setTo}) => {
 
 
     const [_from, _setFrom] = useState("")
     const [_to, _setTo] = useState("")
 
     return (
-        <div className={"RangeSelection"}>
+        <div className={"RangeSelection"} id={id}>
             <h3>{title}</h3>
             <div className={"RangeBody"}>
                 <input value={_from} onChange={e => {

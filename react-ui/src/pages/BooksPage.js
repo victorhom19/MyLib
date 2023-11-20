@@ -31,6 +31,7 @@ const FilterSection = ({setSelectedGenres, setSelectedAuthors, setYearFrom, setY
     return (
         <div className={"FilterSection"}>
             <MultipleChoiceList
+                id={"GenreFilter"}
                 title={"Жанр"}
                 getElementsCallback={fetchGenres}
                 hiddenLimit={5}
@@ -39,11 +40,13 @@ const FilterSection = ({setSelectedGenres, setSelectedAuthors, setYearFrom, setY
                 setSelected={setSelectedGenres}
             />
             <RangeSelection
+                id={'YearFilter'}
                 title={"Год"}
                 setFrom={setYearFrom}
                 setTo={setYearTo}
             />
             <MultipleChoiceList
+                id={"AuthorFilter"}
                 title={"Автор"}
                 getElementsCallback={fetchAuthors}
                 hiddenLimit={5}

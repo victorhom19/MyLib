@@ -76,8 +76,6 @@ async def fill_books():
             pride_and_prejudice_annotation = '\n'.join(f.readlines())
         with open('annotations/farenheit_451.txt', encoding="utf-8") as f:
             farenheit_451_annotation = '\n'.join(f.readlines())
-        with open('annotations/the_lion_the_witch_and_the_wardrobe.txt', encoding="utf-8") as f:
-            the_lion_the_witch_and_the_wardrobe_annotation = '\n'.join(f.readlines())
         with open('annotations/alices_adventures_in_wonderland.txt', encoding="utf-8") as f:
             alices_adventures_in_wonderland_annotation = '\n'.join(f.readlines())
 
@@ -97,8 +95,6 @@ async def fill_books():
             Book(title='Гордость и предубеждение', year=1813, author_id=4, annotation=pride_and_prejudice_annotation),
 
             Book(title='451 градус по Фаренгейту', year=1953, author_id=5, annotation=farenheit_451_annotation),
-
-            # Book(title='Лев, колдунья и платяной шкаф', year=1950, author_id=6, annotation=the_lion_the_witch_and_the_wardrobe_annotation),
 
             Book(title='Алиса в Стране чудес', year=1865, author_id=7, annotation=alices_adventures_in_wonderland_annotation)
         ]
@@ -175,12 +171,7 @@ async def fill_collections():
             Collection(title="Прочитано", user_id=4),
             Collection(title="Буду читать", user_id=5),
             Collection(title="Читаю", user_id=5),
-            Collection(title="Прочитано", user_id=5),
-            Collection(title="Коллекция Сергея", user_id=1),
-            Collection(title="Коллекция Виктора", user_id=2),
-            Collection(title="Коллекция Павла", user_id=3),
-            Collection(title="Коллекция модератора", user_id=4),
-            Collection(title="Коллекция администратора", user_id=5),
+            Collection(title="Прочитано", user_id=5)
         ]
         session.add_all(collections)
         await session.commit()
@@ -304,7 +295,7 @@ async def generate(force=False, users_created=False):
     await fill_book_genres()
     if users_created:
         await fill_collections()
-        await fill_book_to_collections()
+        # await fill_book_to_collections()
         await fill_reviews()
 
 if __name__ == '__main__':

@@ -3,7 +3,7 @@ import logo from 'src/assets/images/mylib-logo.svg'
 import 'src/styles/LoginPage.scss'
 import {useActions} from "../hooks/useActions";
 import {NavModes} from "../store/nav/navSlice";
-import {useState} from "react";
+import React, {useEffect, useState} from 'react'
 
 const LoginPage = () => {
 
@@ -57,6 +57,13 @@ const LoginPage = () => {
         }
 
     }
+
+    useEffect(() => {
+        if (error) {
+            setUsername('')
+            setPassword('')
+        }
+    }, [error])
 
     return (
         <div className={"LoginPage"}>

@@ -128,7 +128,7 @@ const CreatedCollection = ({collection, hideAllTrigger, setHideAllTrigger, creat
                            setEditableTitle(title)
                        }}
                 />
-                <button onClick={fetchDeleteCollection}><img src={deleteIcon} /></button>
+                <button className={'DeleteCollectionButton'} onClick={fetchDeleteCollection}><img src={deleteIcon} /></button>
             </div>
 
             <div className={'Body'}>

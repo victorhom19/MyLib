@@ -121,7 +121,9 @@ const ReviewsBlock = ({book, setUpdateTrigger, setBook}) => {
         <div className={"ReviewsBlock"}>
             <div className={"Header"}>Отзывы</div>
             <div className={"Body"}>
-                {book.reviews.map(review => <ReviewCard review={review} setBook={setBook}/>)}
+                {book.reviews
+                .sort((a, b) => Date.parse(b.created) - Date.parse(a.created))
+                .map(review => <ReviewCard review={review} setBook={setBook}/>)}
                 {auth.id ? <CreateReviewCard book={book} setUpdateTrigger={setUpdateTrigger}/> : null}
             </div>
         </div>

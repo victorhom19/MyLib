@@ -21,7 +21,8 @@ const Element = ({elementObj, titleProperty, selectProperty, setSelected}) => {
 }
 
 const MultipleChoiceList = (
-    {title,
+    {id,
+    title,
     getElementsCallback,
     hiddenLimit,
     titleProperty,
@@ -37,7 +38,7 @@ const MultipleChoiceList = (
 
 
     return (
-        <div className={"MultipleChoiceList"}>
+        <div className={"MultipleChoiceList"} id={id}>
             <h3>{title}</h3>
             {expanded
                 ? elements.map(el => <Element elementObj={el} titleProperty={titleProperty}
