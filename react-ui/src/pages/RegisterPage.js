@@ -3,7 +3,7 @@ import logo from 'src/assets/images/mylib-logo.svg'
 import 'src/styles/RegisterPage.scss'
 import {useActions} from "../hooks/useActions";
 import {NavModes} from "../store/nav/navSlice";
-import {useState} from "react";
+import React, {useEffect, useState} from 'react'
 
 const RegisterPage = () => {
 
@@ -59,12 +59,17 @@ const RegisterPage = () => {
 
     }
 
+    useEffect(() => {
+        if (error) {
+            setEmail('')
+        }
+    }, [error])
+
     return (
         <div className={"RegisterPage"}>
             <h3>Вход</h3>
             <img src={logo} />
             <input
-                className={error ? "Error" : null}
                 placeholder={"Имя"}
                 value={name}
                 onChange={(e) => {setName(e.target.value)}}
@@ -76,7 +81,6 @@ const RegisterPage = () => {
                 onChange={(e) => {setEmail(e.target.value)}}
             />
             <input
-                className={error ? "Error" : null}
                 placeholder={"Пароль"}
                 type={'password'}
                 value={password}

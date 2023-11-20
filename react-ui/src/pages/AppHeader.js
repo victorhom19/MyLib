@@ -79,7 +79,6 @@ const SearchPopup = ({searchBooks, setSearch}) => {
     return (
         <div className={'SearchPopup ' + (logged ? '' : 'Shifted')}>
             {searchBooks.map(b => <button key={b.id} className={'Book'} onClick={() => {
-                console.log(`Setting mode ${{mode: NavModes.BOOK, id: b.id}}`)
                 setNavMode({mode: NavModes.BOOK, id: b.id})
                 setSearch("")
             }}>
