@@ -7,8 +7,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 def run_books_scenario(driver):
-    driver.get('http://localhost:3000')
-
     # Проверка на существование карточек книг (д.б. 10 штук)
     book_cards = WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, 'BookCard'))
@@ -34,7 +32,7 @@ def run_books_scenario(driver):
     )
     assert author_filter is not None
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Нажатие на кнопки "Показать/Скрыть" для фильтра по жанрам
     genre_filter_expand_button = WebDriverWait(genre_filter, 10).until(
@@ -51,7 +49,7 @@ def run_books_scenario(driver):
     time.sleep(0.5)
     genre_filter_shrink_button.click()
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Нажатие на кнопки "Показать/Скрыть" для фильтра по авторам
     author_filter_expand_button = WebDriverWait(author_filter, 10).until(
@@ -68,7 +66,7 @@ def run_books_scenario(driver):
     time.sleep(0.5)
     author_filter_shrink_button.click()
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Проверка количества кнопок фильтров по жанрам (д.б. 5)
     filter_buttons = WebDriverWait(genre_filter, 10).until(
@@ -79,7 +77,7 @@ def run_books_scenario(driver):
 
     # Фильтр "Детектив"
     filter_buttons[0].click()
-    time.sleep(1)
+    time.sleep(0.5)
 
     filtered_books = WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, 'BookCard'))
@@ -88,11 +86,11 @@ def run_books_scenario(driver):
     assert len(filtered_books) == 3
     time.sleep(0.5)
     filter_buttons[0].click()
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Фильтр "Триллер"
     filter_buttons[1].click()
-    time.sleep(1)
+    time.sleep(0.5)
 
     filtered_books = WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, 'BookCard'))
@@ -101,11 +99,11 @@ def run_books_scenario(driver):
     assert len(filtered_books) == 3
     time.sleep(0.5)
     filter_buttons[1].click()
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Фильтр "Научная фантастика"
     filter_buttons[2].click()
-    time.sleep(1)
+    time.sleep(0.5)
 
     filtered_books = WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, 'BookCard'))
@@ -114,7 +112,7 @@ def run_books_scenario(driver):
     assert len(filtered_books) == 4
     time.sleep(0.5)
     filter_buttons[2].click()
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Определение input'ов фильтрации по году издания
     year_inputs = WebDriverWait(year_filter, 10).until(
@@ -131,10 +129,10 @@ def run_books_scenario(driver):
     )
     assert filtered_books is not None
     assert len(filtered_books) == 5
-    time.sleep(1)
+    time.sleep(0.5)
     year_from_input.send_keys(Keys.CONTROL, 'a')
     year_from_input.send_keys(Keys.DELETE)
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Фильтр "до 2000 года"
     year_to_input.send_keys('2000')
@@ -144,10 +142,10 @@ def run_books_scenario(driver):
     )
     assert filtered_books is not None
     assert len(filtered_books) == 8
-    time.sleep(1)
+    time.sleep(0.5)
     year_to_input.send_keys(Keys.CONTROL, 'a')
     year_to_input.send_keys(Keys.DELETE)
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Фильтр "с 2000 по 2015 года"
     year_from_input.send_keys('2000')
@@ -159,12 +157,12 @@ def run_books_scenario(driver):
     )
     assert filtered_books is not None
     assert len(filtered_books) == 2
-    time.sleep(1)
+    time.sleep(0.5)
     year_from_input.send_keys(Keys.CONTROL, 'a')
     year_from_input.send_keys(Keys.DELETE)
     year_to_input.send_keys(Keys.CONTROL, 'a')
     year_to_input.send_keys(Keys.DELETE)
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Проверка количества кнопок фильтров по авторам (д.б. 5)
     filter_buttons = WebDriverWait(author_filter, 10).until(
@@ -175,7 +173,7 @@ def run_books_scenario(driver):
 
     # Фильтр "Дэн Браун"
     filter_buttons[0].click()
-    time.sleep(1)
+    time.sleep(0.5)
 
     filtered_books = WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, 'BookCard'))
@@ -184,11 +182,11 @@ def run_books_scenario(driver):
     assert len(filtered_books) == 3
     time.sleep(0.5)
     filter_buttons[0].click()
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Фильтр "Энди Вейер"
     filter_buttons[1].click()
-    time.sleep(1)
+    time.sleep(0.5)
 
     filtered_books = WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, 'BookCard'))
@@ -197,7 +195,7 @@ def run_books_scenario(driver):
     assert len(filtered_books) == 3
     time.sleep(0.5)
     filter_buttons[1].click()
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Фильтр "Стивен Кинг"
     filter_buttons[2].click()
@@ -210,7 +208,7 @@ def run_books_scenario(driver):
     assert len(filtered_books) == 3
     time.sleep(0.5)
     filter_buttons[2].click()
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Проверка существования элементов пагинации
     pagination_box = WebDriverWait(driver, 10).until(
@@ -277,7 +275,7 @@ def run_books_scenario(driver):
 
     # Поиск "он"
     book_search_input.send_keys('он')
-    time.sleep(1)
+    time.sleep(0.5)
     search_results = WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.XPATH, '//button[@class="Book"]'))
     )
@@ -287,11 +285,11 @@ def run_books_scenario(driver):
     time.sleep(0.5)
     book_search_input.send_keys(Keys.CONTROL, 'a')
     book_search_input.send_keys(Keys.DELETE)
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Поиск
     book_search_input.send_keys('Происхождение')
-    time.sleep(1)
+    time.sleep(0.5)
     search_results = WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.XPATH, '//button[@class="Book"]'))
     )
@@ -302,10 +300,10 @@ def run_books_scenario(driver):
 
     search_results[0].click()
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     title = WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.XPATH, '//div[text()="Происхождение"]'))
     )
     assert title is not None
-    time.sleep(1)
+    time.sleep(0.5)
