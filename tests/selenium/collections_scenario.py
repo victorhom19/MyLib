@@ -8,10 +8,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from tests.selenium.utils import scroll_down, scroll_up
 
 
-def run_collections_scenario(testcase_instance, driver):
-
-    driver.get('http://localhost:3000')
-
+def run_collections_scenario(driver):
     # Проверка на существование кнопки Войти
     login_button = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//button[text()="Войти"]'))
@@ -44,7 +41,7 @@ def run_collections_scenario(testcase_instance, driver):
     assert book_cards is not None
     assert len(book_cards) == 10
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Переход на страницу 1ой книги
     book_cards[0].click()
@@ -67,7 +64,7 @@ def run_collections_scenario(testcase_instance, driver):
     )
     assert collection_buttons is not None
     assert len(collection_buttons) == 3
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Добавление книги в коллекцию "Буду читать"
     to_be_read_button, now_reading_button, read_button = collection_buttons
@@ -89,7 +86,7 @@ def run_collections_scenario(testcase_instance, driver):
     assert book_cards is not None
     assert len(book_cards) == 10
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Переход на страницу 2ой книги
     book_cards[1].click()
@@ -107,7 +104,7 @@ def run_collections_scenario(testcase_instance, driver):
     )
     assert collection_buttons is not None
     assert len(collection_buttons) == 3
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Добавление книги в коллекцию "Читаю"
     to_be_read_button, now_reading_button, read_button = collection_buttons
@@ -129,7 +126,7 @@ def run_collections_scenario(testcase_instance, driver):
     assert book_cards is not None
     assert len(book_cards) == 10
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Переход на страницу 3ой книги
     book_cards[2].click()
@@ -147,7 +144,7 @@ def run_collections_scenario(testcase_instance, driver):
     )
     assert collection_buttons is not None
     assert len(collection_buttons) == 3
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Добавление книги в коллекцию "Прочитано"
     to_be_read_button, now_reading_button, read_button = collection_buttons
@@ -175,7 +172,7 @@ def run_collections_scenario(testcase_instance, driver):
         EC.presence_of_element_located((By.XPATH, '//button[text()="Подборки книг"]'))
     )
 
-    time.sleep(1)
+    time.sleep(0.5)
     collections_button.click()
 
     # Проверка на существование 3 базовых коллекций
@@ -203,13 +200,13 @@ def run_collections_scenario(testcase_instance, driver):
     )
     assert digital_fortress_book is not None
 
-    time.sleep(1)
+    time.sleep(0.5)
     origin_book.click()
-    time.sleep(1)
+    time.sleep(0.5)
     angels_and_demons_book.click()
-    time.sleep(1)
+    time.sleep(0.5)
     digital_fortress_book.click()
-    time.sleep(1)
+    time.sleep(0.5)
     origin_book.click()
 
     # Выбор выпадающего списка
@@ -225,12 +222,12 @@ def run_collections_scenario(testcase_instance, driver):
     assert buttons is not None
     assert len(buttons) == 3
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Преренести книгу в "Читаю"
     buttons[0].click()
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Выбор книги "Ангелы и демоны"
     angels_and_demons_book = WebDriverWait(collections[1], 10).until(
@@ -252,12 +249,12 @@ def run_collections_scenario(testcase_instance, driver):
     assert buttons is not None
     assert len(buttons) == 3
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Преренести книгу в "Прочитано"
     buttons[1].click()
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Выбор книги "Происхождение"
     origin_book = WebDriverWait(collections[1], 10).until(
@@ -279,12 +276,12 @@ def run_collections_scenario(testcase_instance, driver):
     assert buttons is not None
     assert len(buttons) == 3
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Преренести книгу в "Прочитано"
     buttons[1].click()
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Выбор книги "Цифровая крепость"
     digital_fortress_book = WebDriverWait(collections[2], 10).until(
@@ -306,12 +303,12 @@ def run_collections_scenario(testcase_instance, driver):
     assert buttons is not None
     assert len(buttons) == 3
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Удалить книгу из коллекции
     buttons[2].click()
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Выбор книги "Ангелы и демоны"
     angels_and_demons_book = WebDriverWait(collections[2], 10).until(
@@ -333,12 +330,12 @@ def run_collections_scenario(testcase_instance, driver):
     assert buttons is not None
     assert len(buttons) == 3
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Удалить книгу из коллекции
     buttons[2].click()
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Выбор книги "Происхождение"
     origin_book = WebDriverWait(collections[2], 10).until(
@@ -360,12 +357,12 @@ def run_collections_scenario(testcase_instance, driver):
     assert buttons is not None
     assert len(buttons) == 3
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Удалить книгу из коллекции
     buttons[2].click()
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Выбор кнопки создания новой коллекции
     create_collection_button = WebDriverWait(driver, 10).until(
@@ -417,7 +414,7 @@ def run_collections_scenario(testcase_instance, driver):
     assert book_cards is not None
     assert len(book_cards) == 10
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Переход на страницу 1ой книги
     book_cards[0].click()
@@ -435,7 +432,7 @@ def run_collections_scenario(testcase_instance, driver):
     )
     assert collection_buttons is not None
     assert len(collection_buttons) == 4
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Добавление книги в созданную коллекцию "Любимые книги"
     to_be_read_button, now_reading_button, read_button, favorite_books = collection_buttons
@@ -456,7 +453,7 @@ def run_collections_scenario(testcase_instance, driver):
         EC.presence_of_element_located((By.XPATH, '//button[text()="Подборки книг"]'))
     )
 
-    time.sleep(1)
+    time.sleep(0.5)
     collections_button.click()
 
     time.sleep(0.5)
@@ -475,7 +472,7 @@ def run_collections_scenario(testcase_instance, driver):
     )
     assert delete_button is not None
     delete_button.click()
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Проверка на отсутствие дополнительных подборок
     collections = WebDriverWait(driver, 10).until(
@@ -484,4 +481,4 @@ def run_collections_scenario(testcase_instance, driver):
     assert collections is not None
     assert len(collections) == 3
 
-    time.sleep(1)
+    time.sleep(0.5)

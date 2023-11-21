@@ -9,9 +9,6 @@ from tests.selenium.utils import scroll_down, scroll_up
 
 
 def run_roles_scenario(testcase_instance, driver):
-
-    driver.get('http://localhost:3000')
-
     # Проверка на существование карточек с книгами
     book_cards = WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, 'BookCard'))
@@ -19,7 +16,7 @@ def run_roles_scenario(testcase_instance, driver):
     assert book_cards is not None
     assert len(book_cards) == 10
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Переход на страницу 2ой книги
     book_cards[1].click()
@@ -71,7 +68,7 @@ def run_roles_scenario(testcase_instance, driver):
     assert book_cards is not None
     assert len(book_cards) == 10
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Переход на страницу 2ой книги
     book_cards[1].click()
@@ -106,7 +103,6 @@ def run_roles_scenario(testcase_instance, driver):
     logout_button.click()
     time.sleep(0.5)
 
-
     # Вход за пользователя Moderator (с правами на удаление комментариев)
     # Проверка на существование кнопки Войти
     login_button = WebDriverWait(driver, 10).until(
@@ -140,7 +136,7 @@ def run_roles_scenario(testcase_instance, driver):
     assert book_cards is not None
     assert len(book_cards) == 10
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Переход на страницу 2ой книги
     book_cards[1].click()
@@ -208,7 +204,7 @@ def run_roles_scenario(testcase_instance, driver):
     assert book_cards is not None
     assert len(book_cards) == 10
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Переход на страницу 2ой книги
     book_cards[1].click()
@@ -311,7 +307,7 @@ def run_roles_scenario(testcase_instance, driver):
     assert create_button is not None
     time.sleep(0.5)
     create_button.click()
-    time.sleep(1)
+    time.sleep(0.5)
     scroll_up(driver)
     time.sleep(0.5)
 
@@ -354,4 +350,4 @@ def run_roles_scenario(testcase_instance, driver):
 
     # Переход к созданной книге
     book_cards[2].click()
-    time.sleep(2)
+    time.sleep(0.5)

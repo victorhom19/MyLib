@@ -6,8 +6,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 
 def run_auth_scenario(driver):
-    driver.get('http://localhost:3000')
-
     # Проверка на существование кнопки Войти
     button = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//button[text()="Войти"]'))
@@ -112,7 +110,7 @@ def run_auth_scenario(driver):
     time.sleep(0.5)
     password.send_keys('1234')
     continue_button.click()
-    time.sleep(2)
+    time.sleep(0.5)
 
     user_button = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//button[text()="Лиза"]'))
@@ -131,7 +129,7 @@ def run_auth_scenario(driver):
         EC.presence_of_element_located((By.XPATH, '//button[text()="Выйти из аккаунта"]'))
     )
 
-    time.sleep(1)
+    time.sleep(0.5)
     logout_button.click()
 
     # Проверка на существование кнопки Войти

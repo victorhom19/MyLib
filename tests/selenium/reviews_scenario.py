@@ -10,9 +10,6 @@ from tests.selenium.utils import scroll_down, scroll_up
 
 
 def run_reviews_scenario(testcase_instance, driver):
-
-    driver.get('http://localhost:3000')
-
     # Проверка на существование карточек с книгами
     book_cards = WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, 'BookCard'))
@@ -20,7 +17,7 @@ def run_reviews_scenario(testcase_instance, driver):
     assert book_cards is not None
     assert len(book_cards) == 10
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Переход на страницу 1ой книги
     book_cards[0].click()
@@ -32,7 +29,7 @@ def run_reviews_scenario(testcase_instance, driver):
     time.sleep(1)
 
     scroll_down(driver)
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Проверка на отсутствие секции с созданием собственного отзыва
 
@@ -43,7 +40,7 @@ def run_reviews_scenario(testcase_instance, driver):
 
     scroll_up(driver)
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Проверка на существование кнопки Войти
     login_button = WebDriverWait(driver, 10).until(
@@ -77,12 +74,12 @@ def run_reviews_scenario(testcase_instance, driver):
     assert book_cards is not None
     assert len(book_cards) == 10
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Переход на страницу 1ой книги
     book_cards[0].click()
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     scroll_down(driver)
 
@@ -134,24 +131,24 @@ def run_reviews_scenario(testcase_instance, driver):
     )
     assert expand_button is not None
     expand_button.click()
-    time.sleep(2)
+    time.sleep(0.5)
 
     hide_button = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//div[contains(@class, "ReviewCard")]/button[text()="Свернуть"]'))
     )
     assert hide_button is not None
     hide_button.click()
-    time.sleep(2)
+    time.sleep(0.5)
 
     # Удаление отзыва
     delete_button = WebDriverWait(reviews[0], 10).until(
         EC.presence_of_element_located((By.CLASS_NAME, 'DeleteReviewButton'))
     )
     assert delete_button is not None
-    time.sleep(1)
+    time.sleep(0.5)
     delete_button.click()
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Проверка существования 2 отзывов (1 удален)
     reviews = WebDriverWait(driver, 10).until(
@@ -160,4 +157,4 @@ def run_reviews_scenario(testcase_instance, driver):
     assert reviews is not None
     assert len(reviews) == 2
 
-    time.sleep(5)
+    time.sleep(0.5)
